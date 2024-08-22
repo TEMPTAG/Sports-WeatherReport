@@ -21,19 +21,51 @@ const app = express();
 app.use(express.json());
 
 // TODO: Initialize the OpenAI model
+let model: OpenAI;
+
+if (apiKey) {
+  model = new OpenAI({ temperature: 0 , openAIApiKey: apiKey, modelName: 'gpt-3.5-turbo' });
+} else {
+  console.error('OPENAI_API_KEY is not configured.');
+}
 
 // TODO: Define the parser for the structured output
+const parser = StructuredOutputParser.fromZodSchema(z.object({
+  day1: z.string(),
+  day2: z.string(),
+  day3: z.string(),
+  day4: z.string(),
+  day5: z.string(),
+}));
+
 
 // TODO: Get the format instructions from the parser
+const formatInstructions = parser.getFormatInstructions();
 
 // TODO: Define the prompt template
+const promptTemplate = new PromptTemplate({
+  template: `You are an excited sports announcer giving the weather report.  Give me a five-day weather forecast for {location} like you are calling a game. {format_instructions}`,
+  inputVariables: ['location'],
+  partialVariables: { format_instructions: formatInstructions },
+});
 
 // Create a prompt function that takes the user input and passes it through the call method
 const promptFunc = async (input: string) => {
+  try {
         // TODO: Format the prompt with the user input
+        const prompt = await promptTemplate.format({ location: input });
         // TODO: Call the model with the formatted prompt
+        const response = await model.invoke(prompt);
         // TODO: return the JSON response
+        const parsedResponse = await parser.parse(response);
+        return parsedResponse;
         // TODO: Catch any errors and log them to the console
+} catch (error: unknown) {
+  if (error instanceof Error) {
+  console.error('Error:', error.message);
+  }
+  return { error: 'Internal Server Error' };
+}
 };
 
 // Endpoint to handle request
