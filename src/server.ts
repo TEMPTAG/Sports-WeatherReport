@@ -20,16 +20,12 @@ if (!apiKey) {
 const app = express();
 app.use(express.json());
 
-// TODO: Initialize the OpenAI model
+// Initialize the OpenAI model
 let model: OpenAI;
 
-if (apiKey) {
-  model = new OpenAI({ temperature: 0 , openAIApiKey: apiKey, modelName: 'gpt-3.5-turbo' });
-} else {
-  console.error('OPENAI_API_KEY is not configured.');
-}
+model = new OpenAI({ temperature: 0 , openAIApiKey: apiKey, modelName: 'gpt-3.5-turbo' });
 
-// TODO: Define the parser for the structured output
+// Define the parser for the structured output
 const parser = StructuredOutputParser.fromZodSchema(z.object({
   day1: z.string(),
   day2: z.string(),
@@ -38,13 +34,15 @@ const parser = StructuredOutputParser.fromZodSchema(z.object({
   day5: z.string(),
 }));
 
+const parsedOutput = OutputFixingParser.fromLLM(model, parser);
 
-// TODO: Get the format instructions from the parser
-const formatInstructions = parser.getFormatInstructions();
 
-// TODO: Define the prompt template
+// Get the format instructions from the parser
+const formatInstructions = parsedOutput.getFormatInstructions();
+
+// Define the prompt template
 const promptTemplate = new PromptTemplate({
-  template: `You are an excited sports announcer giving the weather report.  Give me a five-day weather forecast for {location} like you are calling a game. {format_instructions}`,
+  template: `You are David "Crofty" Croft, and are the best Formula 1 announcer ever.  Bring your excitement like you are calling the start of a Formula 1 race to a weather forecast for {location}.  In true race announcing style, please give the whole forecast in Formula 1 phrases and references.  Please intro with the traditional: “And it’s lights out, and away we go for a thrilling weather forecast in {location}! Let’s dive right into the action-packed week ahead. Crofty, take it away!” {format_instructions}`,
   inputVariables: ['location'],
   partialVariables: { format_instructions: formatInstructions },
 });
@@ -52,17 +50,17 @@ const promptTemplate = new PromptTemplate({
 // Create a prompt function that takes the user input and passes it through the call method
 const promptFunc = async (input: string) => {
   try {
-        // TODO: Format the prompt with the user input
+        // Format the prompt with the user input
         const prompt = await promptTemplate.format({ location: input });
-        // TODO: Call the model with the formatted prompt
+        // Call the model with the formatted prompt
         const response = await model.invoke(prompt);
-        // TODO: return the JSON response
-        const parsedResponse = await parser.parse(response);
+        // return the JSON response
+        const parsedResponse = await parsedOutput.parse(response);
         return parsedResponse;
-        // TODO: Catch any errors and log them to the console
-} catch (error: unknown) {
+        // Catch any errors and log them to the console
+  } catch (error: unknown) {
   if (error instanceof Error) {
-  console.error('Error:', error.message);
+  console.error('Prompt Error:', error.message);
   }
   return { error: 'Internal Server Error' };
 }
