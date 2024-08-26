@@ -10,8 +10,7 @@
 
 Welcome to the Formula 1 Weather Forecast API! This project allows you to retrieve a five-day weather forecast for any city in the thrilling style of David “Crofty” Croft, the famous Formula 1 announcer. Whether you’re a fan of F1 or just want to hear your weather forecast with some extra excitement, this API has got you covered.
 
-![Screenshot of Application Sample]()
-[You can see the application in action HERE]()
+![Screenshot of Application Sample](/assets/images/apiExample.jpg)
 
 ## Table of Contents
 
