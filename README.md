@@ -1,19 +1,20 @@
 ## <a name="top"></a>
 
-# Sports-WeatherReport
+# Formula 1 Weather Forecast API
 
 ---
 
-![GitHub License](https://img.shields.io/github/license/TEMPTAG/5Day-WeatherReport?label=License)
+![GitHub License](https://img.shields.io/github/license/TEMPTAG/Sports-WeatherReport?label=License)
 
 ## Description
+
+Welcome to the Formula 1 Weather Forecast API! This project allows you to retrieve a five-day weather forecast for any city in the thrilling style of David “Crofty” Croft, the famous Formula 1 announcer. Whether you’re a fan of F1 or just want to hear your weather forecast with some extra excitement, this API has got you covered.
 
 ![Screenshot of Application Sample]()
 [You can see the application in action HERE]()
 
 ## Table of Contents
 
-- [Features](#features)
 - [Technologies Used](#technologies-used)
 - [Installation](#installation)
 - [Usage](#usage)
@@ -24,11 +25,14 @@
 
 ---
 
-## Features
-
----
-
 ## Technologies Used
+
+- **Node.js**: JavaScript runtime environment
+- **Express**: Web framework for Node.js
+- **OpenAI API**: Provides the GPT-3.5 model for generating text
+- **TypeScript**: Type safety and modern JavaScript features
+- **dotenv**: Loads environment variables from a .env file
+- **Zod**: Type validation with TypeScript
 
 ---
 
@@ -64,8 +68,7 @@ npm install
 4. Create an .env file in the root directory and add your OpenWeatherMap API key:
 
 ```bash
-API_BASE_URL=https://api.openweathermap.org
-API_KEY=your_openweathermap_api_key
+OPENAI_API_KEY=your-openai-api-key
 ```
 
 5. Start the development server:
@@ -74,11 +77,33 @@ API_KEY=your_openweathermap_api_key
 npm start
 ```
 
-6. Open your browser and go to http://localhost:3000 to view the application.
-
 ---
 
 ## Usage
+
+**After the server is running, on `http://localhost:3001` by default**
+
+You can use a program like Insomnia to run the API Endpoints for `POST/forecast` to retrieve a five-day forecast in the style of Formula 1 race commentary.
+
+Example Request:
+```json
+{
+    "location": "City, State"
+}
+```
+
+Example Response for Phoenix, AZ:
+```json
+{
+	"result": {
+		"day1": "And it's lights out, and away we go for a thrilling weather forecast in Phoenix, AZ! Let's dive right into the action-packed week ahead. Crofty, take it away! On Day 1, we have clear skies and scorching temperatures, just like the heat of a fierce battle on the track.",
+		"day2": "Moving on to Day 2, we see some high winds sweeping through the area, creating challenging conditions for the drivers, much like a sudden change in weather during a race.",
+		"day3": "As we reach Day 3, there's a chance of thunderstorms in the forecast, adding an element of unpredictability to the weather, similar to the unexpected twists and turns of a Grand Prix.",
+		"day4": "On Day 4, the sun is back out in full force, shining brightly over the desert landscape, mirroring the intensity of a race under the blazing sun.",
+		"day5": "And finally, on Day 5, we wrap up the week with clear skies once again, providing perfect conditions for some fast and furious racing action, just like the thrilling conclusion of a Grand Prix weekend."
+	}
+}
+```
 
 ---
 
